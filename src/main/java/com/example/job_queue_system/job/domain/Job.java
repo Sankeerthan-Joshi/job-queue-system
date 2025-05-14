@@ -16,16 +16,18 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "job")
-@Getter
-@Setter
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 @Builder
 public class Job extends Auditable {
 
@@ -33,6 +35,8 @@ public class Job extends Auditable {
     @GeneratedValue
     private UUID id;
 
+    @Getter
+    @Setter
     private String name;
 
     @Lob
@@ -47,5 +51,9 @@ public class Job extends Auditable {
     private Integer maxRetries;
 
     private LocalDateTime nextRunAt;
+
+    public UUID getId() {
+        return id;
+    }
 
 }
