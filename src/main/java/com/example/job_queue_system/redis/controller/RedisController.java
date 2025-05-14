@@ -1,7 +1,13 @@
 package com.example.job_queue_system.redis.controller;
 
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.example.job_queue_system.common.exception.CustomBadRequestException;
 import com.example.job_queue_system.redis.service.RedisService;
 
 @RestController
@@ -16,13 +22,16 @@ public class RedisController {
 
     @PostMapping("/save")
     public String save(@RequestParam String key, @RequestParam String value) {
-        redisService.save(key, value);
-        return "Saved!";
+        throw new CustomBadRequestException("This is a custom bad request exception");
+
+        // redisService.save(key, value);
+        // return "Saved!";
     }
 
     @GetMapping("/get")
     public Object get(@RequestParam String key) {
-        return redisService.get(key);
+        throw new CustomBadRequestException("This is a custom bad request exception");
+        // return redisService.get(key);
     }
 
     @DeleteMapping("/delete")
