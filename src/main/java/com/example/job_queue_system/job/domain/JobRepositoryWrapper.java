@@ -1,7 +1,5 @@
 package com.example.job_queue_system.job.domain;
 
-import java.util.UUID;
-
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,7 +15,7 @@ public class JobRepositoryWrapper {
         return jobRepository.save(job);
     }
 
-    public Job findById(UUID id) {
+    public Job findById(String id) {
         return jobRepository.findById(id).orElse(null);
     }
 

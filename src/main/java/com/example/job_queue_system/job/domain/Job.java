@@ -1,7 +1,8 @@
 package com.example.job_queue_system.job.domain;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
+
+import org.hibernate.annotations.UuidGenerator;
 
 import com.example.job_queue_system.common.Auditable;
 import com.example.job_queue_system.job.data.JobStatus;
@@ -33,7 +34,8 @@ public class Job extends Auditable {
 
     @Id
     @GeneratedValue
-    private UUID id;
+    @UuidGenerator
+    private String id;
 
     @Getter
     @Setter
@@ -52,7 +54,7 @@ public class Job extends Auditable {
 
     private LocalDateTime nextRunAt;
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 

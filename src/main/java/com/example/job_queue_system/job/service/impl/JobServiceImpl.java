@@ -1,9 +1,9 @@
 package com.example.job_queue_system.job.service.impl;
 
-import java.util.UUID;
-
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import com.example.job_queue_system.common.exception.CustomBadRequestException;
 import com.example.job_queue_system.job.data.JobPayload;
 import com.example.job_queue_system.job.data.JobResponse;
 import com.example.job_queue_system.job.domain.Job;
@@ -24,50 +24,57 @@ public class JobServiceImpl implements JobService {
         // Implementation for creating a job
         Job job = Job.builder()
                 .name(jobPayload.getJobName())
-                .maxRetries(jobPayload.getNoOfRetires())
+                .maxRetries(jobPayload.getNoOfRetries())
                 .payload(jobPayload.getJobMetadata())
                 .build();
-        job = jobRepository.save(job);
+        try {
+            job = jobRepository.save(job);
+
+        } catch (DataIntegrityViolationException e) {
+            throw new CustomBadRequestException("Job with the same name already exists");
+        }
         return JobResponse.builder()
-                .jobId(String.valueOf(job.getId()))
+                .jobId(job.getId())
                 .build();
         
     }
 
     @Override
     public JobResponse updateJob(String jobId, JobPayload jobPayload) {
-        Job job = jobRepository.findById(UUID.fromString(jobId));
+        Job job = jobRepository.findById(jobId);
         if (job == null) {
-            throw new IllegalArgumentException("Job not found");
+            throw new CustomBadRequestException("Job not found");
         }
-        if(job.getStatus() != null){
+
+        if (jobPayload.getJobName() != null) {
 
             job.setName(jobPayload.getJobName());
         }
 
-        if(job.getName() != null){
+        if (jobPayload.getNoOfRetries() != null) {
 
-            job.setName(jobPayload.getJobName());
+            job.setMaxRetries(jobPayload.getNoOfRetries());
         }
-
-        if(job.getMaxRetries() != null){
-
-            job.setMaxRetries(jobPayload.getNoOfRetires());
-        }
-        if(job.getPayload() != null){
+        if (jobPayload.getJobMetadata() != null) {
 
             job.setPayload(jobPayload.getJobMetadata());
         }
         job = jobRepository.save(job);
         return JobResponse.builder()
-                .jobId(String.valueOf(job.getId()))
+                .jobId(job.getId())
                 .build();
     }
 
     @Override
-    public JobResponse deleteJob(Long jobId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteJob'");
+    public JobResponse deleteJob(String jobId) {
+        Job job = jobRepository.findById(jobId);
+        if (job == null) {
+            throw new CustomBadRequestException("Job not found");
+        }
+        jobRepository.delete(job);
+        return JobResponse.builder()
+                .jobId(jobId)
+                .build();
     }
     
 }
