@@ -13,7 +13,7 @@ public class JobPayload {
 
     private String jobName;
     private String jobMetadata;
-    private Integer noOfRetires;
+    private Integer noOfRetries;
 
     
 }

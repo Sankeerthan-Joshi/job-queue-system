@@ -11,5 +11,5 @@ public interface JobService {
 
     public JobResponse updateJob(String jobId, JobPayload jobPayload);
 
-    public JobResponse deleteJob(Long jobId);
+    public JobResponse deleteJob(String jobId);
 }
